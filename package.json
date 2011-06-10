@@ -1,0 +1,9 @@
+{
+  "name": "contract"
+, "version": "0.0.1"
+, "author": "Josh Channings"
+, "description": "Spec interfaces (contracts), and test implementations against them"
+, "homepage": "http://github.com/randomblast/contract"
+, "engines": ["node >= 0.4.8"]
+, "main": "./"
+}
