@@ -78,4 +78,6 @@ var Contract = module.exports = function(members) {
 
     return batch;
   };
+
+  return this;
 }
