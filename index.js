@@ -2,11 +2,9 @@ var assert = require('assert');
 
 /**
  * @param members A hash keyed by member names, with required types as the values
- * @param vows Function which returns tests to be run against implementations
  */
-var Contract = module.exports = function(members, vows) {
+var Contract = module.exports = function(members) {
   this.members = members;
-  this.implementation_vows = vows || function() {return {};};
   var contract = this;
 
   /**
@@ -35,17 +33,29 @@ var Contract = module.exports = function(members, vows) {
    *
    * This applies in the same context as implementedBy(), except it returns a batch of Vows that make
    * up the implementation comparison, ready for passing to vows.addBatch().
+   *
+   * @usage
+   * addBatch({
+   *   "YourImplementation": {
+   *     topic: YourImplementation,
+   *     "": YourContract.getVowsFor(YourImplementation),
+   *     "the rest of your tests...": {
+   *     }
+   *   }
+   * });
+   *
+   * @param implementation Contract implementation to generate vows for
+   * @returns Vows context, to be inserted into a batch, as a context with an empty name
    */
-  this.vows = function(implementation) {
-    var batch = contract.implementation_vows(implementation);
+  this.getVowsFor = function(implementation) {
+    var batch = {};
 
-    // The single context should be the Contract to test
     for(var member_name in contract.members) {
       var context = "." + member_name;
       batch[context] = {topic: member_name,};
 
       batch[context][" should be a " + typeof contract.members[member_name]] = function(topic) {
-        assert.equal(typeof(contract.members[topic]), typeof(implementation[topic]));
+        assert.equal(typeof(implementation[topic]), typeof(contract.members[topic]));
       }
 
       if(typeof contract.members[member_name] === "function") {

@@ -3,28 +3,12 @@ var assert = require('assert');
 
 var Contract = require('./');
 
-var TestContract = new Contract(
-  // Definition
-  {
-    test_function: function(arg_1, arg_2, arg_3) {},
-    test_string: "",
-    test_bool: true,
-    test_int: 1
-  },
-  // Vows
-  function(self) 
-  {
-    return {
-      topic: self,
-      ".test_function('Goodbye', 'cruel', 'world')": {
-        topic: function() {return self.test_function('Goodbye', 'cruel', 'world');},
-        "should return 'Goodbye cruel world'": function(topic) {
-          assert.equal(topic, 'Goodbye cruel world');
-        }
-      }
-    };
-  }
-);
+var TestContract = new Contract({
+  test_function: function(arg_1, arg_2, arg_3) {},
+  test_string: "",
+  test_bool: true,
+  test_int: 1
+});
 
 var TestContractCorrectImplementation = {
   test_function: function(arg_1, arg_2, arg_3) {
@@ -72,7 +56,49 @@ vows.describe('Contract').addBatch({
       topic: TestContract.implementedBy(TestContractIncorrectImplementation),
       "should return false": function(topic) {assert.isFalse(topic);}
     },
-  },
-  "TestContractCorrectImplementation": TestContract.vows(TestContractCorrectImplementation),
+  }
 })
+.addBatch({
+  "TestContractCorrectImplementation": {
+    topic: TestContractCorrectImplementation,
+    // This is the correct way to add automatically generated vows
+    "": TestContract.getVowsFor(TestContractCorrectImplementation),
+    ".test_function('Goodbye', 'cruel', 'world')": {
+      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
+      "should return 'Goodbye cruel world'": function(topic) {
+        assert.equal(topic, 'Goodbye cruel world');
+      }
+    }
+  }
+})
+
+/* Enable these batches if you want to test correct failure of automatic Contract vows
+.addBatch({
+  "TestContractIncorrectImplementation": {
+    topic: TestContractIncorrectImplementation,
+    // This is the correct way to add automatically generated vows
+    "": TestContract.getVowsFor(TestContractIncorrectImplementation),
+    ".test_function('Goodbye', 'cruel', 'world')": {
+      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
+      "should return 'Goodbye cruel world'": function(topic) {
+        assert.equal(topic, 'Goodbye cruel world');
+      }
+    }
+  }
+})
+.addBatch({
+  "TestContractIncompleteImplementation": {
+    topic: TestContractIncompleteImplementation,
+    // This is the correct way to add automatically generated vows
+    "": TestContract.getVowsFor(TestContractIncompleteImplementation),
+    ".test_function('Goodbye', 'cruel', 'world')": {
+      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
+      "should return 'Goodbye cruel world'": function(topic) {
+        assert.equal(topic, 'Goodbye cruel world');
+      }
+    }
+  }
+})
+*/
+
 .export(module);
