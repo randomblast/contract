@@ -31,8 +31,9 @@ var Contract = module.exports = function(members) {
   /**
    * Get a batch of Vows for an *Implementation* of this Contract
    *
-   * This applies in the same context as implementedBy(), except it returns a batch of Vows that make
-   * up the implementation comparison, ready for passing to vows.addBatch().
+   * If all these generated tests pass on your implementation, then calling implementedBy()
+   * on the contract that generated the tests, passing your implementation as the argument,
+   * will return true. Likewise, if the tests fail, the implementedBy() call will return false.
    *
    * @usage
    * addBatch({
