@@ -5,6 +5,7 @@ var assert = require('assert');
  */
 var Contract = module.exports = function(members) {
   this.members = members;
+  this.contract_vows = {};
   var contract = this;
 
   /**
@@ -29,6 +30,16 @@ var Contract = module.exports = function(members) {
   };
 
   /**
+   * Specify a batch of vows to test implementations against.
+   *
+   * @param context Name of the context to add the vows under
+   * @param batch Contents of the context - contains more contexts, topics and vows
+   */
+  this.addVows = function(context, batch) {
+    this.contract_vows[context] = batch;
+  }
+
+  /**
    * Get a batch of Vows for an *Implementation* of this Contract
    *
    * If all these generated tests pass on your implementation, then calling implementedBy()
@@ -49,7 +60,7 @@ var Contract = module.exports = function(members) {
    * @returns Vows context, to be inserted into a batch, as a context with an empty name
    */
   this.getVowsFor = function(implementation) {
-    var batch = {};
+    var batch = contract.contract_vows;
 
     for(var member_name in contract.members) {
       var context = "." + member_name;

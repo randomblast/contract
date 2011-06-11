@@ -10,6 +10,15 @@ var TestContract = new Contract({
   test_int: 1
 });
 
+TestContract.addVows(".test_function('Goodbye', 'cruel', 'world')", {
+  topic: function(implementation) {
+    return implementation.test_function('Goodbye', 'cruel', 'world');
+  },
+  "should return 'Goodbye cruel world'": function(topic) {
+    assert.equal(topic, 'Goodbye cruel world');
+  }
+});
+
 var TestContractCorrectImplementation = {
   test_function: function(arg_1, arg_2, arg_3) {
     return arg_1 + ' ' + arg_2 + ' ' + arg_3;
@@ -61,14 +70,7 @@ vows.describe('Contract').addBatch({
 .addBatch({
   "TestContractCorrectImplementation": {
     topic: TestContractCorrectImplementation,
-    // This is the correct way to add automatically generated vows
     "": TestContract.getVowsFor(TestContractCorrectImplementation),
-    ".test_function('Goodbye', 'cruel', 'world')": {
-      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
-      "should return 'Goodbye cruel world'": function(topic) {
-        assert.equal(topic, 'Goodbye cruel world');
-      }
-    }
   }
 })
 
@@ -76,27 +78,13 @@ vows.describe('Contract').addBatch({
 .addBatch({
   "TestContractIncorrectImplementation": {
     topic: TestContractIncorrectImplementation,
-    // This is the correct way to add automatically generated vows
     "": TestContract.getVowsFor(TestContractIncorrectImplementation),
-    ".test_function('Goodbye', 'cruel', 'world')": {
-      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
-      "should return 'Goodbye cruel world'": function(topic) {
-        assert.equal(topic, 'Goodbye cruel world');
-      }
-    }
   }
 })
 .addBatch({
   "TestContractIncompleteImplementation": {
     topic: TestContractIncompleteImplementation,
-    // This is the correct way to add automatically generated vows
     "": TestContract.getVowsFor(TestContractIncompleteImplementation),
-    ".test_function('Goodbye', 'cruel', 'world')": {
-      topic: function(self) {return self.test_function('Goodbye', 'cruel', 'world');},
-      "should return 'Goodbye cruel world'": function(topic) {
-        assert.equal(topic, 'Goodbye cruel world');
-      }
-    }
   }
 })
 */
