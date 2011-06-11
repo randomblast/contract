@@ -42,17 +42,17 @@ vows.describe('Contract').addBatch({
       assert.isTrue(TestContract instanceof Contract);
     },
 
-    ".implementedBy(<a correct implementation>)": {
+    ".implementedBy(TestContractCorrectImplementation)": {
       topic: TestContract.implementedBy(TestContractCorrectImplementation),
       "should return true": function(topic) {assert.isTrue(topic);}
     },
 
-    ".implementedBy(<an incomplete implementation>)": {
+    ".implementedBy(TestContractIncompleteImplementation)": {
       topic: TestContract.implementedBy(TestContractIncompleteImplementation),
       "should return false": function(topic) {assert.isFalse(topic);}
     },
 
-    ".implementedBy(<complete implementation, except a function has a different number of arguments>)": {
+    ".implementedBy(TestContractIncorrectImplementation)": {
       topic: TestContract.implementedBy(TestContractIncorrectImplementation),
       "should return false": function(topic) {assert.isFalse(topic);}
     },
