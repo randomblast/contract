@@ -38,18 +38,20 @@ var Contract = module.exports = function(members, vows) {
    */
   this.vows = function(implementation) {
     var batch = contract.implementation_vows(implementation);
-    var name = this;
 
     // The single context should be the Contract to test
-      for(var member_name in contract.members) {
-        var context = "." + member_name;
-        var vow =  " should be a " + typeof contract.members[member_name];
-        batch[context] = {
-          topic: function() {
-            return (typeof(implementation[member_name]) == typeof(contract.members[member_name]));
-          }
-        };
-        batch[context][vow] = function(topic) {assert.isTrue(topic);};
+    for(var member_name in contract.members) {
+      var context = "." + member_name;
+      batch[context] = {topic: member_name,};
+
+      batch[context][" should be a " + typeof contract.members[member_name]] = function(topic) {
+        assert.equal(typeof(contract.members[topic]), typeof(implementation[topic]));
+      }
+
+      if(typeof contract.members[member_name] === "function") {
+        batch[context][" should take " + contract.members[member_name].length + " arguments"] =
+          function(topic) {assert.equal(contract.members[topic].length, implementation[topic].length);};
+      }
     }
 
     return batch;
